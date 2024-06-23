@@ -2,9 +2,8 @@ const express = require('express')
 const { createTodo, updateTodo } = require('./types')
 const { todo } = require('./db')
 const app = express()
-const port = 3000
 
-app.use(express.json())
+app.use(express.json());
 
 app.post('/todo', async function(req, res) {
     const createPayLoad= req.body;
@@ -26,7 +25,7 @@ app.post('/todo', async function(req, res) {
         msg: "Todo Created"
     })
 })
-app.get('/todo', async function(req, res) {
+app.get('/todos', async function(req, res) {
     const todos= await todo.find();
     res.json({
         todos
@@ -51,6 +50,4 @@ app.put('/completed', async function(req, res) {
     })
 })
 
-app.listen(port, function() {
-  console.log(`Example app listening on port ${port}`)
-})
+app.listen(3000);
