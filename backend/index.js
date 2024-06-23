@@ -1,11 +1,12 @@
 const express = require('express')
 const { createTodo, updateTodo } = require('./types')
+const { todo } = require('./db')
 const app = express()
 const port = 3000
 
 app.use(express.json())
 
-app.post('/todo', function(req, res) {
+app.post('/todo', async function(req, res) {
     const createPayLoad= req.body;
     const parsedPayLoad= createTodo.safeParse(createPayLoad);
     if(!parsedPayLoad.success){
@@ -14,11 +15,24 @@ app.post('/todo', function(req, res) {
         })
         return;
     }
-})
-app.get('/todo', function(req, res) {
 
+    await todo.create({
+        title: createPayLoad.title, 
+        description: createPayLoad.description,
+        completed: false
+    })
+    
+    res.json({
+        msg: "Todo Created"
+    })
 })
-app.put('/completed', function(req, res) {
+app.get('/todo', async function(req, res) {
+    const todos= await todo.find();
+    res.json({
+        todos
+    })
+})
+app.put('/completed', async function(req, res) {
     const updatePayLoad= req.body;
     const parsedPayLoad= updateTodo.safeParse(updatePayLoad);
     if(!parsedPayLoad.success){
@@ -27,6 +41,14 @@ app.put('/completed', function(req, res) {
         })
         return;
     }
+    await todo.update({
+        _id: req.body.id
+    }, {
+        completed: true
+    })
+    res.json({
+        msg:"Todo Marked as completed"
+    })
 })
 
 app.listen(port, function() {
