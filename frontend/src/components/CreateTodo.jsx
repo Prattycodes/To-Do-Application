@@ -19,7 +19,7 @@ export function CreateTodo(props) {
 
         <button style={{padding: 10, margin: 10 }} 
         onClick={function(){
-            fetch("https://localhost:3000/todo", {
+            fetch("http://localhost:3000/todo", {
                 method: "POST", 
                 body: JSON.stringify({
                     title: title,
